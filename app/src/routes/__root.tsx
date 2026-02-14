@@ -11,6 +11,7 @@ import { createServerFn } from '@tanstack/react-start'
 import * as React from 'react'
 import { DefaultCatchBoundary } from '../components/DefaultCatchBoundary'
 import { NotFound } from '../components/NotFound'
+import { DarkModeToggle } from '../components/DarkModeToggle'
 import appCss from '../styles/app.css?url'
 import { seo } from '../utils/seo'
 import { getSupabaseServerClient } from '../utils/supabase'
@@ -109,6 +110,9 @@ function AppShell({ children }: { children: React.ReactNode }) {
             </div>
             <span className="text-xl font-bold tracking-tight text-gradient">Splitgor</span>
           </Link>
+          <div className="mt-4">
+            <DarkModeToggle />
+          </div>
         </div>
 
         <nav className="flex-1 px-4 py-4 space-y-1">
@@ -175,6 +179,9 @@ function AppShell({ children }: { children: React.ReactNode }) {
               Sign Up
             </Link>
           )}
+          <div className="ml-2 scale-75 origin-right">
+            <DarkModeToggle />
+          </div>
         </header>
         <div className="p-4 md:p-8 max-w-7xl mx-auto">
           {children}
@@ -215,6 +222,20 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  var supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+                  if (!theme && supportDarkMode) theme = 'dark';
+                  if (theme === 'dark') document.documentElement.classList.add('dark');
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
